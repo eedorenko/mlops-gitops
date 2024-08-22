@@ -5,12 +5,8 @@ on:
     branches: ["main"]
   workflow_dispatch:
     inputs:
-      model_name:
-        required: true
-        type: string
-        description: 'ML model name'
       model_version:
-        required: true
+        required: false
         type: string
         description: 'ML model vserion'
 
@@ -30,26 +26,38 @@ jobs:
     - name: Checkout Source
       uses: actions/checkout@v3
 
-    - name: Log Model Name and version
+
+    - name: Generate Image Tag
+      id: generate_image_tag
+      run: |
+        IMAGE_TAG=$(git rev-parse --short=4 HEAD)
+        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+        VERSION=v-${{ vars.VERSION }}-${{ github.run_number }}
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+    - uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Download Model
       id: lof_model_name_version
       run: |
+        if [ -z "$MODEL_VERSION" ]; then
+          MODEL_VERSION=$(az ml model list  -n $MODEL_NAME  -w $ML_WORKSPACE -g $RESOURCE_GROUP -r 1 | jq '.[0].version')
+        fi
+
+        az ml model download -n $MODEL_NAME -v $MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP
+
         echo $MODEL_NAME
         echo $MODEL_VERSION
+
+        ls -ltr
       env:
-        MODEL_NAME: ${{ inputs.model_name }}
+        MODEL_NAME: ${{ vars.MODEL_NAME }}
         MODEL_VERSION: ${{ inputs.model_version }}
+        ML_WORKSPACE: ${{ vars.ML_WORKSPACE }}
+        RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
 
-    # - name: Generate Image Tag
-    #   id: generate_image_tag
-    #   run: |
-    #     IMAGE_TAG=$(git rev-parse --short=4 HEAD)
-    #     echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
-    #     VERSION=v-${{ vars.VERSION }}-${{ github.run_number }}
-    #     echo "VERSION=$VERSION" >> $GITHUB_ENV
-    # - uses: azure/login@v2
-    #   with:
-    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     #   # push
     # - name: Authenticate to AZ, allow ACR public network
