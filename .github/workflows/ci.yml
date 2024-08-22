@@ -41,9 +41,12 @@ jobs:
 
     - name: Download Model
       id: lof_model_name_version
-      uses: azure/CLI@v1
+      uses: azure/CLI@v2
       with:
+        azcliversion: latest
         inlineScript: |
+          az extension add --name ml
+
           if [ -z "$MODEL_VERSION" ]; then
             MODEL_VERSION=$(az ml model list  -n $MODEL_NAME  -w $ML_WORKSPACE -g $RESOURCE_GROUP -r 1 | jq '.[0].version')
           fi
