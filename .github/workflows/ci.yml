@@ -50,7 +50,9 @@ jobs:
         echo $MODEL_NAME
         echo $MODEL_VERSION
 
-        az ml model download -n $MODEL_NAME -v $MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP
+        mkdir -p model
+
+        az ml model download -n $MODEL_NAME -v $MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -d model
 
         ls -ltr
       env:
