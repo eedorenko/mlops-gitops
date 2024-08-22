@@ -41,7 +41,8 @@ jobs:
 
     - name: Download Model
       run: |
-        az extension add -n ml -y
+        # az extension add -n ml -y
+        az extension add -n azure-cli-ml -y
 
         if [ -z "$MODEL_VERSION" ]; then
           MODEL_VERSION=$(az ml model list  -n $MODEL_NAME  -w $ML_WORKSPACE -g $RESOURCE_GROUP -r 1 | jq -r '.[0].version') 
