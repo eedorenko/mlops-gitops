@@ -44,7 +44,7 @@ jobs:
         az extension add -n ml -y
 
         if [ -z "$MODEL_VERSION" ]; then
-          MODEL_VERSION=$(az ml model list  -n $MODEL_NAME  -w $ML_WORKSPACE -g $RESOURCE_GROUP -r 1 | jq '.[0].version')
+          MODEL_VERSION=$(az ml model list  -n $MODEL_NAME  -w $ML_WORKSPACE -g $RESOURCE_GROUP -r 1 | jq '.[0].version') -r
         fi
 
         az ml model download -n $MODEL_NAME -v $MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP
