@@ -1,0 +1,28 @@
+name: post-model-registration
+ 
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_name:
+        required: true
+        type: string
+        description: 'ML model name'
+      model_version:
+        required: true
+        type: string
+        description: 'ML model vserion'
+
+jobs:
+  invoke_CI_CD:
+      name: "Invoke CI CD"
+      runs-on: ubuntu-latest
+      steps:      
+
+      - name: Start CI CD
+        run: |
+            gh workflow run cd.yml -f environment="$START_ENVIRONMENT" -f commit_id="$PROMOTED_COMMIT_ID" -f image_name="$IMAGE_NAME"          
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROMOTED_COMMIT_ID: ${{ github.event.sha }}
+          IMAGE_NAME: ${{ github.event.description }}        

@@ -1,0 +1,27 @@
+apiVersion: hub.kalypso.io/v1alpha1
+kind: DeploymentDescriptor
+metadata:
+  name: $ENVIRONMENT-$DEPLOYMENT_TARGET
+  labels:
+    config-revision: $CONFIG_REVISION
+spec:
+  workload:
+    name: control-tower
+    source:
+        repo: https://github.com/$SOURCE_REPO
+        branch: $SOURCE_BRANCH
+        path: .
+    application:
+        name: dm              
+        workspace:
+            name: dm
+  deploymentTarget:
+    name: $DEPLOYMENT_TARGET-$ENVIRONMENT
+    environment: $ENVIRONMENT
+    manifests:
+        repo: https://github.com/$GITOPS_REPO
+        branch: $ENVIRONMENT
+        path: $DEPLOYMENT_TARGET_MANIFESTS_PATH
+  workloadVersion:
+    version: $VERSION
+    commit: $SRC_COMMIT

@@ -1,0 +1,78 @@
+# The old one. To be removed
+---
+name: Edge Module CI Action
+
+on: # GitActions-Self Hosted runners
+  push:
+    branches:
+      - devSTOP
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set outputs
+      id: vars
+      run: echo "sha_short=$(git rev-parse --short=4 HEAD)" >> $GITHUB_OUTPUT
+    - name: Authenticate to AZ
+      uses: azure/CLI@v1
+      with:
+        login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+        azcliversion: 2.55.0
+        inlineScript: |
+          az account list
+          az login --service-principal -u 57c276e1-9253-47f3-8fa3-23454d83ed2b -p ${{ secrets.SP_UAT }} --tenant 3ce34e42-c07d-47bb-b72a-4ce606de6b88
+          az acr login --name khazwus2dgtwdevacr001.azurecr.io --expose-token
+          az acr repository list --name khazwus2dgtwdevacr001.azurecr.io/controltoweragent
+          az acr build --agent-pool acrpeagentpool --image controltoweragent:v-${{ steps.vars.outputs.sha_short }}-amd64 --registry khazwus2dgtwdevacr001.azurecr.io --file EdgeAdapterSolution/modules/ControlTowerAgent/Dockerfile.amd64 .
+      
+        
+      # - uses: actions/checkout@v2
+      # - name: Setup Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     architecture: "x64"
+      #   env:
+      #     AGENT_TOOLSDIRECTORY: /opt/hostedtoolcache
+          
+      # - name: testing path
+      #   run: |
+      #     pwd
+      #     ls -la
+      #     echo $USER
+      #     groups
+      #     # id --groups
+          
+      
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
+        
+# #       - run: |
+# #           docker build EdgeAdapterSolution/modules/ControlTowerAgent/Dockerfile.amd64
+# #           docker push khazwus2dgtwdevacr001.azurecr.io/controltoweragent 
+        
+#       - name: Login to ACR
+#         uses: azure/docker-login@v1
+#         with:
+#           username: ${{ secrets.ACR_USERNAME }}
+#           password: ${{ secrets.ACR_PASSWORD }}
+#           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+#       - name: Set outputs
+#         id: vars
+#         run: echo "sha_short=$(git rev-parse --short=6 HEAD)" >> $GITHUB_OUTPUT
+
+#       - name: Build ControlTowerAgent docker image
+#         uses: docker/build-push-action@v4
+#         with:
+#            push: true
+#            file: EdgeAdapterSolution/modules/ControlTowerAgent/Dockerfile.amd64
+#            context: .
+#            tags: ${{ secrets.ACR_LOGIN_SERVER }}/controltoweragent-dev:v1.77-${{ steps.vars.outputs.sha_short }}-amd64
+#             build-contexts:
+#               name: 'docker build -t ${{env.ACR_IMAGE_PATH_CONTROLTOWERAGENT}} -f Dockerfile.amd64 .'
+            
+#       - run: |
+#           docker push khazwus2dgtwdevacr001.azurecr.io/controltoweragent
