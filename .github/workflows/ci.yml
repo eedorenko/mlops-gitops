@@ -35,7 +35,7 @@ jobs:
 
         VERSION=v-${{ vars.VERSION }}-${{ github.run_number }}
         echo "VERSION=$VERSION" >> $GITHUB_ENV
-    - uses: azure/login@v2
+    - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -52,7 +52,7 @@ jobs:
 
         mkdir -p model
 
-        az ml model download -n $MODEL_NAME -v $MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -d model
+        az ml model download -n $MODEL_NAME -v $MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -p model
 
         ls -ltr
       env:
