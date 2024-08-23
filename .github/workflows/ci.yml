@@ -53,7 +53,7 @@ jobs:
 
         mkdir -p model
 
-        az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t model
+        az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t inference
 
         ls -ltr
       env:
@@ -74,11 +74,11 @@ jobs:
     #       az acr update --name ${{ vars.CONTAINER_REG }} --public-network-enabled true
     #       az acr update --name ${{ vars.CONTAINER_REG }} --default-action Allow
 
-    # - name: Build and push controltower image to ACR
-    #   run: |
-    #     az acr build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:${{ github.run_id }} -t $IMAGE_NAME:$VERSION --registry ${{ vars.CONTAINER_REG }} -g ${{ vars.RESOURCE_GROUP }} controltower/.
-    #   env:
-    #     IMAGE_NAME: ${{ vars.IMAGE_NAME }}
+    - name: Build and push scoring image to ACR
+      run: |
+        az acr build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:${{ github.run_id }} -t $IMAGE_NAME:$VERSION --registry ${{ vars.CONTAINER_REG }} -g ${{ vars.RESOURCE_GROUP }} inference/.
+      env:
+        IMAGE_NAME: ${{ vars.IMAGE_NAME }}
 
     # - name: Build and push rcloneapp image to ACR
     #   run: |
