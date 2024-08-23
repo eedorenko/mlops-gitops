@@ -51,6 +51,11 @@ jobs:
         mkdir -p model
         az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t model
 
+        ls -ltr model
+        
+        find model -name \*.h5
+
+
         find model -name \*.h5 -exec cp {} inference \;      
 
         ls -ltr inference
