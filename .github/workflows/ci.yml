@@ -51,7 +51,7 @@ jobs:
         mkdir -p model
         az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t model
 
-        ls -ltr model/overfill_multimodel_
+        # ls -ltr model/overfill_multimodel_
         
         find model -name \*.h5
 
