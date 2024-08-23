@@ -58,7 +58,7 @@ jobs:
         IMAGE_TAG=$(git rev-parse --short=4 HEAD)
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-        VERSION=v-${{ vars.VERSION }}-ml-$MODEL_VERSION-${{ github.run_number }}
+        VERSION=v-${{ vars.VERSION }}-${{ github.run_number }}-ml-$MODEL_VERSION
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Build and push scoring image to ACR
