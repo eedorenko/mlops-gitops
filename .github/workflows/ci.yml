@@ -47,15 +47,9 @@ jobs:
         if [ -z "$MODEL_VERSION" ]; then
           MODEL_VERSION=$(az ml model list  -n $MODEL_NAME  -w $ML_WORKSPACE -g $RESOURCE_GROUP -l | jq -r '.[0].version') 
         fi
-
-        echo $MODEL_NAME
-        echo $MODEL_VERSION
-
-        mkdir -p model
-
         az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t inference
 
-        ls -ltr
+        ls -ltr inference
       env:
         MODEL_NAME: ${{ vars.MODEL_NAME }}
         MODEL_VERSION: ${{ inputs.model_version }}
