@@ -47,7 +47,11 @@ jobs:
         if [ -z "$MODEL_VERSION" ]; then
           MODEL_VERSION=$(az ml model list  -n $MODEL_NAME  -w $ML_WORKSPACE -g $RESOURCE_GROUP -l | jq -r '.[0].version') 
         fi
-        az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t inference
+        
+        mkdir -p model
+        az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t model
+
+        find model -name \*.h5 -exec cp {} inference \;      
 
         ls -ltr inference
       env:
