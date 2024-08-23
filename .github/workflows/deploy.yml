@@ -66,43 +66,6 @@ jobs:
         env:
           IMAGE_TAG: ${{ inputs.image_tag }} 
           VERSION: ${{ inputs.version }} 
-
-      # # If/when the current environment is configured with its own container registry (e.g. prod), 
-      # # so that IMAGE_CONTAINER_REGISTRY environment variable is set,
-      # # the `deploy` workflow pushes the image to this repo and generates manifests with the new full image name.
-      # # It requires a secret AZURE_IMAGE_CONTAINER_CREDENTIALS with the service principal that has write access to the new ACR
-
-      # - uses: azure/login@v1
-      #   if: vars.IMAGE_CONTAINER_REGISTRY != ''
-      #   with:
-      #     creds: ${{ secrets.AZURE_IMAGE_CONTAINER_CREDENTIALS }}          
-
-      # - name: Override Image Container Registry
-      #   if: vars.IMAGE_CONTAINER_REGISTRY != ''
-      #   run: |
-
-      #       DEV_SP_ID=$(echo "$AZURE_CREDENTIALS" | jq -r .clientId)
-      #       DEV_SP_PWD=$(echo "$AZURE_CREDENTIALS" | jq -r .clientSecret)
-      #       OLD_IMAGE_NAME=$OLD_CONTAINER_REGISTRY.azurecr.io/$IMAGE_NAME
-
-      #       az acr import \
-      #         --name "$IMAGE_CONTAINER_REGISTRY" \
-      #         --source "$OLD_IMAGE_NAME" \
-      #         --force \
-      #         --username "$DEV_SP_ID" \
-      #         --password "$DEV_SP_PWD"
-            
-                 
-      #       NEW_IMAGE_NAME=$IMAGE_CONTAINER_REGISTRY.azurecr.io/${{ vars.IMAGE_NAME }}
-      #       echo "FULL_IMAGE_NAME=$NEW_IMAGE_NAME" >> $GITHUB_ENV
-      #       # this FULL_IMAGE_NAME should be passed to IMAGE_NAME env var of the Generate Manifests step
-      #       # so this stpe should be updated as well a little to use the FULL_IMAGE_NAME instead of IMAGE_NAME
-            
-      #   env:
-      #     IMAGE_CONTAINER_REGISTRY: ${{ vars.IMAGE_CONTAINER_REGISTRY }}
-      #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-      #     IMAGE_NAME: ${{ vars.IMAGE_NAME }}
-      #     OLD_CONTAINER_REGISTRY: ${{ vars.CONTAINER_REG }}
       
       - name: Generate Manifests
         run: |
@@ -111,7 +74,7 @@ jobs:
           HELM_PATH: ${{ github.workspace }}/helm
           CONFIGS_PATH: ${{ github.workspace }}/configs  
           MANIFESTS_PATH: ${{ github.workspace }}/manifests
-          WORKLOAD: control-tower
+          WORKLOAD: ${{ github.event.repository.name }}
           ENVIRONMENT: ${{ inputs.environment }}
           SOURCE_REPO: ${{ github.event.repository.full_name }}
           SOURCE_BRANCH: ${{ github.event.repository.default_branch }}
@@ -120,7 +83,6 @@ jobs:
           SRC_COMMIT: ${{ inputs.commit_id }}          
           CONFIG_REVISION: ${{ env.CONFIG_COMMIT_ID}}
           IMAGE_NAME: ${{ vars.CONTAINER_REG }}.azurecr.io/${{ vars.IMAGE_NAME }}
-          RCLONE_IMAGE_NAME: ${{ vars.CONTAINER_REG }}.azurecr.io/${{ vars.RCLONE_IMAGE_NAME }}
 
 
 

@@ -2,31 +2,23 @@ name: ci
 
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
   workflow_dispatch:
-    inputs:
-      model_version:
-        required: false
-        type: string
-        description: 'ML model vserion'
-
 
 
 jobs:
   # it's a good practice to have a quality check job before building and pushing the image in CI pipeline
-  # quality-check:
-  #   uses: ./.github/workflows/pr.yml
+  quality-check:
+    uses: ./.github/workflows/pr.yml
 
   Build_Push_Image:
     runs-on: ubuntu-latest
-    # needs: [quality-check]
+    needs: [quality-check]
     permissions: write-all
 
     steps:
     - name: Checkout Source
       uses: actions/checkout@v3
-
-
     - name: Generate Image Tag
       id: generate_image_tag
       run: |
@@ -35,72 +27,43 @@ jobs:
 
         VERSION=v-${{ vars.VERSION }}-${{ github.run_number }}
         echo "VERSION=$VERSION" >> $GITHUB_ENV
-    - uses: azure/login@v1
+    - uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Download Model
-      run: |
-        # az extension add -n ml -y
-        az extension add -n azure-cli-ml -y
+      # push
+    - name: Authenticate to AZ, allow ACR public network
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.55.0
+        inlineScript: |
+          az acr login --name ${{ vars.CONTAINER_REG }}.azurecr.io --expose-token
+          az acr update --name ${{ vars.CONTAINER_REG }} --public-network-enabled true
+          az acr update --name ${{ vars.CONTAINER_REG }} --default-action Allow
 
-        if [ -z "$MODEL_VERSION" ]; then
-          MODEL_VERSION=$(az ml model list  -n $MODEL_NAME  -w $ML_WORKSPACE -g $RESOURCE_GROUP -l | jq -r '.[0].version') 
-        fi
-
-        echo $MODEL_NAME
-        echo $MODEL_VERSION
-
-        mkdir -p model
-
-        az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t model
-
-        ls -ltr
-      env:
-        MODEL_NAME: ${{ vars.MODEL_NAME }}
-        MODEL_VERSION: ${{ inputs.model_version }}
-        ML_WORKSPACE: ${{ vars.ML_WORKSPACE }}
-        RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
-
-
-
-    #   # push
-    # - name: Authenticate to AZ, allow ACR public network
-    #   uses: azure/CLI@v1
-    #   with:
-    #     azcliversion: 2.55.0
-    #     inlineScript: |
-    #       az acr login --name ${{ vars.CONTAINER_REG }}.azurecr.io --expose-token
-    #       az acr update --name ${{ vars.CONTAINER_REG }} --public-network-enabled true
-    #       az acr update --name ${{ vars.CONTAINER_REG }} --default-action Allow
-
-    # - name: Build and push controltower image to ACR
+    # Placeholder
+    # - name: Build and push image to ACR
     #   run: |
-    #     az acr build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:${{ github.run_id }} -t $IMAGE_NAME:$VERSION --registry ${{ vars.CONTAINER_REG }} -g ${{ vars.RESOURCE_GROUP }} controltower/.
+    #     az acr build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:${{ github.run_id }} -t $IMAGE_NAME:$VERSION --registry ${{ vars.CONTAINER_REG }} -g ${{ vars.RESOURCE_GROUP }} src/.
     #   env:
     #     IMAGE_NAME: ${{ vars.IMAGE_NAME }}
 
-    # - name: Build and push rcloneapp image to ACR
-    #   run: |
-    #     az acr build -t $RCLONE_IMAGE_NAME:$IMAGE_TAG -t $RCLONE_IMAGE_NAME:${{ github.run_id }} -t $RCLONE_IMAGE_NAME:$VERSION --registry ${{ vars.CONTAINER_REG }} -g ${{ vars.RESOURCE_GROUP }} rclone/.
-    #   env:
-    #     RCLONE_IMAGE_NAME: ${{ vars.RCLONE_IMAGE_NAME }}
 
-    # - name: Disable ACR public network
-    #   uses: azure/CLI@v1
-    #   with:
-    #     azcliversion: 2.55.0
-    #     inlineScript: |
-    #       az acr login --name ${{ vars.CONTAINER_REG }}.azurecr.io --expose-token
-    #       az acr update --name ${{ vars.CONTAINER_REG }} --default-action Deny
-    #       az acr update --name ${{ vars.CONTAINER_REG }} --public-network-enabled false
-    # - name: Azure logout
-    #   run: az logout
+    - name: Disable ACR public network
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.55.0
+        inlineScript: |
+          az acr login --name ${{ vars.CONTAINER_REG }}.azurecr.io --expose-token
+          az acr update --name ${{ vars.CONTAINER_REG }} --default-action Deny
+          az acr update --name ${{ vars.CONTAINER_REG }} --public-network-enabled false
+    - name: Azure logout
+      run: az logout
 
-    # - name: Start CD
-    #   run: |
-    #     gh workflow run deploy.yml -f environment="$START_ENVIRONMENT" -f commit_id="$PROMOTED_COMMIT_ID" -f image_tag="$IMAGE_TAG" -f version="$VERSION"
-    #   env:
-    #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     PROMOTED_COMMIT_ID: ${{ github.sha }}
-    #     START_ENVIRONMENT: ${{ vars.START_ENVIRONMENT }}
+    - name: Start CD
+      run: |
+        gh workflow run deploy.yml -f environment="$START_ENVIRONMENT" -f commit_id="$PROMOTED_COMMIT_ID" -f image_tag="$IMAGE_TAG" -f version="$VERSION"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PROMOTED_COMMIT_ID: ${{ github.sha }}
+        START_ENVIRONMENT: ${{ vars.START_ENVIRONMENT }}

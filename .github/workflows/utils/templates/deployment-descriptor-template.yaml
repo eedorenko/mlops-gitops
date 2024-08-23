@@ -3,18 +3,18 @@ kind: DeploymentDescriptor
 metadata:
   name: $ENVIRONMENT-$DEPLOYMENT_TARGET
   labels:
-    config-revision: $CONFIG_REVISION
+    config-revision: $CONFIG_REVISION  
 spec:
   workload:
-    name: control-tower
+    name: update-me
     source:
         repo: https://github.com/$SOURCE_REPO
         branch: $SOURCE_BRANCH
         path: .
     application:
-        name: dm              
+        name: update-me              
         workspace:
-            name: dm
+            name: update-me
   deploymentTarget:
     name: $DEPLOYMENT_TARGET-$ENVIRONMENT
     environment: $ENVIRONMENT
