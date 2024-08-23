@@ -27,18 +27,6 @@ jobs:
       uses: actions/checkout@v3
 
 
-    - name: Generate Image Tag
-      id: generate_image_tag
-      run: |
-        IMAGE_TAG=$(git rev-parse --short=4 HEAD)
-        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
-        VERSION=v-${{ vars.VERSION }}-${{ github.run_number }}
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
     - name: Download Model
       run: |
         # az extension add -n ml -y
@@ -51,19 +39,26 @@ jobs:
         mkdir -p model
         az ml model download -i $MODEL_NAME:$MODEL_VERSION -w $ML_WORKSPACE -g $RESOURCE_GROUP -t model
 
-        # ls -ltr model/overfill_multimodel_
-        
-        find model -name \*.h5
-
-
         find model -name \*.h5 -exec cp {} inference \;      
-
-        ls -ltr inference
+        
+        echo "MODEL_VERSION=$MODEL_VERSION" >> $GITHUB_ENV
       env:
         MODEL_NAME: ${{ vars.MODEL_NAME }}
         MODEL_VERSION: ${{ inputs.model_version }}
         ML_WORKSPACE: ${{ vars.ML_WORKSPACE }}
         RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
+    
+    - name: Generate Image Tag
+      id: generate_image_tag
+      run: |
+        IMAGE_TAG=$(git rev-parse --short=4 HEAD)
+        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+        VERSION=v-${{ vars.VERSION }}-ml-$MODEL_VERSION-${{ github.run_number }}
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}        
 
 
     - name: Build and push scoring image to ACR
