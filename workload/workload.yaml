@@ -3,7 +3,7 @@ kind: Workload
 metadata:
   name: tacos-burritos-ml
   labels:
-    type: application
+    type: ml-model
 spec:
   deploymentTargets:
     - name: dev
