@@ -111,7 +111,7 @@ jobs:
           HELM_PATH: ${{ github.workspace }}/helm
           CONFIGS_PATH: ${{ github.workspace }}/configs  
           MANIFESTS_PATH: ${{ github.workspace }}/manifests
-          WORKLOAD: control-tower
+          WORKLOAD: tacos-burritos-ml
           ENVIRONMENT: ${{ inputs.environment }}
           SOURCE_REPO: ${{ github.event.repository.full_name }}
           SOURCE_BRANCH: ${{ github.event.repository.default_branch }}
