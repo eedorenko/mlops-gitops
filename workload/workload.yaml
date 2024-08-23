@@ -3,13 +3,14 @@ kind: Workload
 metadata:
   name: tacos-burritos-ml
   labels:
-    type: application
+    type: ml-model
 spec:
   deploymentTargets:
     - name: dev
       labels:
         purpose: dev-functional-test
         application: dm
+        zone: gray
       environment: dev
       manifests:
         repo: https://github.com/eedorenko/mlops-gitops-gitops
