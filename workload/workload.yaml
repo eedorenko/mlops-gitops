@@ -1,0 +1,17 @@
+apiVersion: scheduler.kalypso.io/v1alpha1
+kind: Workload
+metadata:
+  name: tacos-burritos-ml
+  labels:
+    type: application
+spec:
+  deploymentTargets:
+    - name: dev
+      labels:
+        purpose: dev-functional-test
+        application: dm
+      environment: dev
+      manifests:
+        repo: https://github.com/eedorenko/mlops-gitops-gitops
+        branch: dev
+        path: ./tacos-burritos-ml
