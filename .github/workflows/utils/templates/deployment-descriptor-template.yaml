@@ -14,7 +14,7 @@ spec:
     application:
         name: dm              
         workspace:
-            name: kaizen-team
+            name: demo-team
   deploymentTarget:
     name: $DEPLOYMENT_TARGET-$ENVIRONMENT
     environment: $ENVIRONMENT
