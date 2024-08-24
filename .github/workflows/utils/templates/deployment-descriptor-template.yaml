@@ -6,7 +6,7 @@ metadata:
     config-revision: $CONFIG_REVISION
 spec:
   workload:
-    name: tacos-burritos-ml
+    name: tacosburritosml
     source:
         repo: https://github.com/$SOURCE_REPO
         branch: $SOURCE_BRANCH
