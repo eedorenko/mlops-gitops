@@ -6,7 +6,7 @@ metadata:
     type: ml-model
 spec:
   deploymentTargets:
-    - name: dev1
+    - name: dev
       labels:
         purpose: dev-functional-test
         application: dm
