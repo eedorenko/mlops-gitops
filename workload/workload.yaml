@@ -11,6 +11,7 @@ spec:
         purpose: dev-functional-test
         application: dm
         zone: gray
+        type: model
       environment: dev
       manifests:
         repo: https://github.com/eedorenko/mlops-gitops-gitops
