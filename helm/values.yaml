@@ -1,6 +1,26 @@
 app:
-  name: tacos-burritos
+  name: detection-model
 replicas: 1
-port: 8000
-image: $IMAGE_NAME:$IMAGE_TAG
+port: 8080
+# image: $IMAGE_NAME:$IMAGE_TAG
+image: khazeus2devacrmfgdip001.azurecr.io/overfill-inference-api:8579f37d0a93f70671f558dbd967acfaafaef27d
 version: $VERSION
+serviceAccountName: detection-model-sa
+imagePullPolicy: Always
+cpuRequest: 500m
+memoryRequest: 250Mi
+cpuLimit: 1000m
+memoryLimit: 1000Mi
+runAsUser: 10100
+runAsGroup: 10100
+task:
+  type: object_detection
+  model:
+    class_mapping: ""
+    confidence_threshold: ""
+  worker:
+    operating_fps: ""
+    tracker: 
+      name: ""
+      distance_function: ""
+      distance_threshold: ""

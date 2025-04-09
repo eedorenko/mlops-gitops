@@ -1,29 +1,116 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{  .Values.app.name}}-deployment
+  name: {{ .Values.app.name }}-deployment
   annotations:
-    version: {{  .Values.version}}
-  {{ if .Values.namespace }}    
-  namespace: {{  .Values.namespace}}
-  {{ end }}    
+    version: {{ .Values.version }}
+  {{ if .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+  {{ end }}
 spec:
-  strategy: 
-    type: Recreate      
-  replicas: {{  .Values.replicas}}
+  strategy:
+    type: Recreate
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{  .Values.app.name}}
+      app: {{ .Values.app.name }}
   template:
     metadata:
       labels:
-        app: {{  .Values.app.name}}      
+        app: {{ .Values.app.name }}
       annotations:
-        version: {{  .Values.version}}
+        version: {{ .Values.version }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
-      - name: {{  .Values.app.name}}
-        image: {{  .Values.image}}
-        imagePullPolicy: Always
+      - name: inference-api
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
         ports:
         - containerPort: {{  .Values.port}}
+        resources:
+          requests:
+            cpu: {{ .Values.cpuRequest }}
+            memory: {{ .Values.memoryRequest }}
+          limits:
+            cpu: {{ .Values.cpuLimit }}
+            memory: {{ .Values.memoryLimit }}
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsUser: {{ .Values.runAsUser }}
+          runAsGroup: {{ .Values.runAsGroup }}
+          seccompProfile:
+            type: RuntimeDefault
+          runAsNonRoot: true
+          capabilities:
+            drop:
+              - ALL
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.app.name }}-config
+        #read env vars from configmap
+        env:
+          - name: TASK_TYPE
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: task_type
+          - name: MODEL_CLASS_MAPPING
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: model_class_mapping
+          - name: MODEL_CONFIDENCE_THRESHOLD
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: model_confidence_threshold
+          - name: WORKER_OPERATING_FPS
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: worker_operating_fps
+          - name: WORKER_TRACKER_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: worker_tracker_name
+          - name: WORKER_TRACKER_DISTANCE_FUNCTION
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: worker_tracker_distance_function
+          - name: WORKER_TRACKER_DISTANCE_THRESHOLD
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: worker_tracker_distance_threshold
+          - name: WORKER_CAMERAS
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: worker_cameras
+          - name: WORKER_ZONES
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: worker_zones
+          - name: WORKER_ZONES_ZONE_BOUNDARY_THRESHOLD
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: worker_zones_zone_boundary_threshold
+          - name: WORKER_ZONES_RENTRY_BUFFER_TIME
+            valueFrom:
+              configMapKeyRef:
+                name: platform-config
+                key: worker_zones_reentry_buffer_time
