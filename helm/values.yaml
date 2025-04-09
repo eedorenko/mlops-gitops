@@ -1,5 +1,15 @@
-app:
+task:
   name: detection-model
+  type: object_detection
+  model:
+    class_mapping: "TBD"
+    confidence_threshold: "TBD"
+  worker:
+    operating_fps: "TBD"
+    tracker: 
+      name: "TBD"
+      distance_function: "TBD"
+      distance_threshold: "TBD"
 replicas: 1
 port: 8080
 image: $IMAGE_NAME:$IMAGE_TAG
@@ -12,14 +22,3 @@ cpuLimit: 1000m
 memoryLimit: 1000Mi
 runAsUser: 10100
 runAsGroup: 10100
-task:
-  type: object_detection
-  model:
-    class_mapping: ""
-    confidence_threshold: ""
-  worker:
-    operating_fps: ""
-    tracker: 
-      name: ""
-      distance_function: ""
-      distance_threshold: ""

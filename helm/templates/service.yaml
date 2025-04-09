@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{  .Values.app.name}}-service
+  name: {{  .Values.task.name}}-service
   {{ if .Values.namespace }}    
   namespace: {{  .Values.namespace}}
   {{ end }}    
 spec:
   selector:
-    app: {{  .Values.app.name}}
+    app: {{  .Values.task.name}}
   ports:
     - protocol: TCP
       port: {{  .Values.port}}

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.app.name }}-deployment
+  name: {{ .Values.task.name }}-deployment
   annotations:
     version: {{ .Values.version }}
   {{ if .Values.namespace }}
@@ -13,11 +13,11 @@ spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}
+      task: {{ .Values.task.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app.name }}
+        task: {{ .Values.task.name }}
       annotations:
         version: {{ .Values.version }}
     spec:
@@ -56,7 +56,7 @@ spec:
               - ALL
         envFrom:
         - configMapRef:
-            name: {{ .Values.app.name }}-config
+            name: {{ .Values.task.name }}-config
         #read env vars from configmap
         env:
           - name: TASK_TYPE

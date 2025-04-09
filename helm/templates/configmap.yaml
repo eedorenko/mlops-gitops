@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.app.name }}-config
+  name: {{ .Values.task.name }}-config
   annotations:
     version: {{ .Values.version }}
   {{ if .Values.namespace }}
