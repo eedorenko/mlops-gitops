@@ -59,17 +59,17 @@ jobs:
         PROMOTED_COMMIT_ID: ${{ inputs.promoted_commit_id }}
         ACTIVE_ENVIRONMENT: ${{ inputs.environment }}
 
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # - uses: azure/login@v1
+    #   with:
+    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Wait for deployment to complete   
-      run: |
-          .github/workflows/utils/wait-for-deployment.sh -r "$GITOPS_REPO" -b "$ACTIVE_ENVIRONMENT" -c "$COMMIT_ID"
-      env:
-        GITOPS_REPO: https://github.com/${{ vars.MANIFESTS_REPO }}
-        ACTIVE_ENVIRONMENT: ${{ inputs.environment }}
-        COMMIT_ID: ${{ inputs.commit_id }}
+    # - name: Wait for deployment to complete   
+    #   run: |
+    #       .github/workflows/utils/wait-for-deployment.sh -r "$GITOPS_REPO" -b "$ACTIVE_ENVIRONMENT" -c "$COMMIT_ID"
+    #   env:
+    #     GITOPS_REPO: https://github.com/${{ vars.MANIFESTS_REPO }}
+    #     ACTIVE_ENVIRONMENT: ${{ inputs.environment }}
+    #     COMMIT_ID: ${{ inputs.commit_id }}
 
     - name: Promote to Next Environment
       if: inputs.promotion == 'y' && vars.NEXT_ENVIRONMENT != ''
