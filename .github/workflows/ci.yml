@@ -13,6 +13,8 @@ on:
 env:
   SEM_VER: 0.0.1
   IMAGE_NAME: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}
+  BURGER_IMAGE_NAME: ghcr.io/${{ github.repository }}/burger_detection_model_automl
+  CHICKEN_IMAGE_NAME: ghcr.io/${{ github.repository }}/chicken_detection_model_automl
 
 
 jobs:
@@ -79,7 +81,7 @@ jobs:
         push: true
         context: inference
         # tags: burger_detection_model_automl:${{ env.IMAGE_TAG }}, chicken_detection_model_automl:${{ env.IMAGE_TAG }}
-        tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}, ${{ env.IMAGE_NAME }}:latest  
+        tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}, ${{ env.IMAGE_NAME }}:latest, ${{ env.BURGER_IMAGE_NAME }}:${{ env.IMAGE_TAG }}, ${{ env.BURGER_IMAGE_NAME }}:latest, ${{ env.CHICKEN_IMAGE_NAME }}:${{ env.IMAGE_TAG }}, ${{ env.CHICKEN_IMAGE_NAME }}:latest  
 
     - name: Start CD
       run: |
