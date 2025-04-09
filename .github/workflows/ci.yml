@@ -10,6 +10,9 @@ on:
         type: string
         description: 'ML model vserion'
 
+env:
+  SEM_VER: 0.0.1
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}
 
 
 jobs:
@@ -57,6 +60,14 @@ jobs:
         VERSION=v-${{ vars.VERSION }}-${{ github.run_number }}-ml-$MODEL_VERSION
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
+    - name: Generate Image Tag
+      id: generate_image_tag
+      run: |
+          IMAGE_TAG=${{ env.SEM_VER }}-${{ github.run_number }}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV     
+
+          VERSION=${{ env.SEM_VER }}-${{ github.run_number }}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV    
     # - name: Build and push scoring image to ACR
     #   run: |
     #     az acr build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:${{ github.run_id }} -t $IMAGE_NAME:$VERSION --registry ${{ vars.CONTAINER_REG }} -g ${{ vars.RESOURCE_GROUP }} inference/.
@@ -76,7 +87,8 @@ jobs:
       with:
         push: true
         context: inference
-        tags: burger_detection_model_automl:${{ env.IMAGE_TAG }}, chicken_detection_model_automl:${{ env.IMAGE_TAG }}
+        # tags: burger_detection_model_automl:${{ env.IMAGE_TAG }}, chicken_detection_model_automl:${{ env.IMAGE_TAG }}
+        tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}, ${{ env.IMAGE_NAME }}:latest  
 
     - name: Start CD
       run: |
