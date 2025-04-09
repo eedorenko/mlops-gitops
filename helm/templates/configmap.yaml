@@ -9,7 +9,7 @@ metadata:
   {{ end }}
 data:  
   TASK_TYPE: {{ .Values.task.type }}
-  MODEL_CLASS_MAPPING: {{- .Values.task.model.class_mapping| toYaml | indent 1 }}
+  MODEL_CLASS_MAPPING: {{ .Values.task.model.class_mapping | indent 2 }}
   MODEL_CONFIDENCE_THRESHOLD: {{ .Values.task.model.confidence_threshold }}
   WORKER_OPERATING_FPS: {{ .Values.task.worker.operating_fps }}
   WORKER_TRACKER_NAME: {{ .Values.task.worker.tracker.name }}
