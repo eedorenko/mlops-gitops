@@ -11,8 +11,8 @@ data:
   TASK_TYPE: {{ .Values.task.type }}
   MODEL_CLASS_MAPPING: |
     {{- .Values.task.model.class_mapping | nindent 6 }}
-  MODEL_CONFIDENCE_THRESHOLD: {{ .Values.task.model.confidence_threshold }}
-  WORKER_OPERATING_FPS: {{ .Values.task.worker.operating_fps }}
+  MODEL_CONFIDENCE_THRESHOLD: {{ .Values.task.model.confidence_threshold | quote }}
+  WORKER_OPERATING_FPS: {{ .Values.task.worker.operating_fps | quote }}
   WORKER_TRACKER_NAME: {{ .Values.task.worker.tracker.name }}
-  WORKER_TRACKER_DISTANCE_FUNCTION: {{ .Values.task.worker.tracker.distance_function }}
-  WORKER_TRACKER_DISTANCE_THRESHOLD: {{ .Values.task.worker.tracker.distance_threshold }}
+  WORKER_TRACKER_DISTANCE_FUNCTION: {{ .Values.task.worker.tracker.distance_function | quote }}
+  WORKER_TRACKER_DISTANCE_THRESHOLD: {{ .Values.task.worker.tracker.distance_threshold | quote }}
