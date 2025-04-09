@@ -2,7 +2,8 @@ task:
   name: detection-model
   type: object_detection
   model:
-    class_mapping: "TBD"
+    class_mapping: |
+      "TBD"
     confidence_threshold: "TBD"
   worker:
     operating_fps: "TBD"
