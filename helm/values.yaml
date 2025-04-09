@@ -2,8 +2,7 @@ app:
   name: detection-model
 replicas: 1
 port: 8080
-# image: $IMAGE_NAME:$IMAGE_TAG
-image: khazeus2devacrmfgdip001.azurecr.io/overfill-inference-api:8579f37d0a93f70671f558dbd967acfaafaef27d
+image: $IMAGE_NAME:$IMAGE_TAG
 version: $VERSION
 serviceAccountName: detection-model-sa
 imagePullPolicy: Always
