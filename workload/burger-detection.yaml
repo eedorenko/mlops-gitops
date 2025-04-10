@@ -48,13 +48,6 @@ spec:
               "type": "string",
               "description": "Daypart definitions for vision (30 minute slices used to confirm that lighting conditions aren't impacting accuracy)",
             },      
-            model_class_mapping {
-              "type": "object",
-              "description": "The model class mapping used to support the task of burger detection",
-              "additionalProperties": {
-                "type": "string"
-              }
-            },
             model_confidence_threshold {
               "type": "number",
               "minimum": 0,
