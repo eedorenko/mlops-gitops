@@ -14,7 +14,7 @@ spec:
     application:
         name: kos          
         workspace:
-            name: demo-team
+            name: dt
   deploymentTarget:
     name: $DEPLOYMENT_TARGET-$ENVIRONMENT
     environment: $ENVIRONMENT
