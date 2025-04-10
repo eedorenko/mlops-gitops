@@ -15,7 +15,7 @@ spec:
       manifests:
         repo: https://github.com/eedorenko/mlops-gitops-gitops
         branch: dev
-        path: ./chicken-detection
+        path: ./entree-detection
     - name: stage
       labels:
         purpose: functional-test
@@ -23,7 +23,7 @@ spec:
       manifests:
         repo: https://github.com/eedorenko/mlops-gitops-gitops
         branch: stage
-        path: ./chicken-detection
+        path: ./entree-detection
     - name: prod-gray
       labels:
         purpose: prod
@@ -31,4 +31,4 @@ spec:
       manifests:
         repo: https://github.com/eedorenko/mlops-gitops-gitops
         branch: prod-gray
-        path: ./chicken-detection
+        path: ./entree-detection
