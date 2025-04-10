@@ -12,7 +12,7 @@ task:
       distance_function: "TBD"
       distance_threshold: "TBD"
 replicas: 1
-port: 8080
+port: 8000
 image: $IMAGE_NAME:$IMAGE_TAG
 version: $VERSION
 serviceAccountName: detection-model-sa

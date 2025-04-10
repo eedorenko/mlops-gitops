@@ -37,12 +37,12 @@ spec:
             memory: {{ .Values.memoryLimit }}
         readinessProbe:
           httpGet:
-            path: /health
-            port: 8080
+            path: /predict
+            port: 8000
         livenessProbe:
           httpGet:
-            path: /health
-            port: 8080
+            path: /predict
+            port: 8000
         securityContext:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
@@ -114,3 +114,9 @@ spec:
               configMapKeyRef:
                 name: platform-config
                 key: worker_zones_rentry_buffer_time
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+      volumes:
+      - name: tmp-volume
+        emptyDir: {}  
