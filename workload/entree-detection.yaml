@@ -1,7 +1,7 @@
 apiVersion: scheduler.kalypso.io/v1alpha1
 kind: Workload
 metadata:
-  name: chicken-detection
+  name: entree-detection
   labels:
     application: kos
     type: model
