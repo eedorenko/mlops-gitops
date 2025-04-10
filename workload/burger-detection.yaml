@@ -55,6 +55,12 @@ configSchemas:
           "type": "string"
         }
       },
+      model_confidence_threshold {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "description": "The confidence threshold used to determine if a burger is detected"
+      },
       worker_zones {
         "type": "array",
         "description": "The zones that the worker is responsible for",
