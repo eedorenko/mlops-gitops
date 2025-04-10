@@ -1,0 +1,34 @@
+apiVersion: scheduler.kalypso.io/v1alpha1
+kind: Workload
+metadata:
+  name: chicken-detection
+  labels:
+    application: kos
+    type: model
+    task: entree-detection
+spec:
+  deploymentTargets:
+    - name: dev
+      labels:
+        purpose: dev-functional-test
+      environment: dev
+      manifests:
+        repo: https://github.com/eedorenko/mlops-gitops-gitops
+        branch: dev
+        path: ./chicken-detection
+    - name: stage
+      labels:
+        purpose: stage-test
+      environment: stage
+      manifests:
+        repo: https://github.com/eedorenko/mlops-gitops-gitops
+        branch: stage
+        path: ./chicken-detection
+    - name: prod-gray
+      labels:
+        purpose: prod
+      environment: prod
+      manifests:
+        repo: https://github.com/eedorenko/mlops-gitops-gitops
+        branch: prod-gray
+        path: ./chicken-detection
