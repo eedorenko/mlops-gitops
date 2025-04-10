@@ -113,4 +113,4 @@ spec:
             valueFrom:
               configMapKeyRef:
                 name: platform-config
-                key: worker_zones_reentry_buffer_time
+                key: worker_zones_rentry_buffer_time
