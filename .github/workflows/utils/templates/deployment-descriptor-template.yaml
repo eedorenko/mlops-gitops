@@ -12,7 +12,7 @@ spec:
         branch: $SOURCE_BRANCH
         path: .
     application:
-        name: dm              
+        name: kos          
         workspace:
             name: demo-team
   deploymentTarget:
