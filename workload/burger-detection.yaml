@@ -32,52 +32,52 @@ spec:
         repo: https://github.com/eedorenko/mlops-gitops-gitops
         branch: prod-gray
         path: ./burger-detection
-configSchemas:
-   - |
-    {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "Burger Platform Config Schema",
-    "description": "Schema for platform config",
-    "type": "object",
-    "properties": {
-      "brand_id": {
-        "type": "string",
-        "description": "The unified string ID for a brand"
-      },
-      vision_dayparts {
-        "type": "string",
-        "description": "Daypart definitions for vision (30 minute slices used to confirm that lighting conditions aren't impacting accuracy)",
-      },      
-      model_class_mapping {
-        "type": "object",
-        "description": "The model class mapping used to support the task of burger detection",
-        "additionalProperties": {
-          "type": "string"
+  configSchemas:
+    - |
+      {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Burger Platform Config Schema",
+      "description": "Schema for platform config",
+      "type": "object",
+      "properties": {
+        "brand_id": {
+          "type": "string",
+          "description": "The unified string ID for a brand"
+        },
+        vision_dayparts {
+          "type": "string",
+          "description": "Daypart definitions for vision (30 minute slices used to confirm that lighting conditions aren't impacting accuracy)",
+        },      
+        model_class_mapping {
+          "type": "object",
+          "description": "The model class mapping used to support the task of burger detection",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        model_confidence_threshold {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "The confidence threshold used to determine if a burger is detected"
+        },
+        worker_zones {
+          "type": "array",
+          "description": "The zones that the worker is responsible for",
+          "items": {
+            "type": "string"
+          }
+        },
+        worker_tracker_distance_threshold {
+          "type": "number",
+          "description": "The distance threshold used by the worker tracker to determine if a person is in the zone"
         }
       },
-      model_confidence_threshold {
-        "type": "number",
-        "minimum": 0,
-        "maximum": 1,
-        "description": "The confidence threshold used to determine if a burger is detected"
-      },
-      worker_zones {
-        "type": "array",
-        "description": "The zones that the worker is responsible for",
-        "items": {
-          "type": "string"
-        }
-      },
-      worker_tracker_distance_threshold {
-        "type": "number",
-        "description": "The distance threshold used by the worker tracker to determine if a person is in the zone"
-      }
-    },
-      "required": [
-      "brand_id",
-      "vision_dayparts",
-      "model_class_mapping",
-      "worker_zones",
-      "worker_tracker_distance_threshold"
-      ]              
-    }	
+        "required": [
+        "brand_id",
+        "vision_dayparts",
+        "model_class_mapping",
+        "worker_zones",
+        "worker_tracker_distance_threshold"
+        ]              
+      }	
