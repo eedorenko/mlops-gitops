@@ -44,27 +44,31 @@ spec:
               "type": "string",
               "description": "The unified string ID for a brand"
             },
-            model_class_mapping {
+            "vision_dayparts": {
+              "type": "string",
+              "description": "Daypart definitions for vision (30 minute slices used to confirm that lighting conditions aren't impacting accuracy)",
+            },      
+            "model_class_mapping": {
               "type": "object",
               "description": "The model class mapping used to support the task of burger detection",
               "additionalProperties": {
                 "type": "string"
               }
             },
-            model_confidence_threshold {
+            "model_confidence_threshold": {
               "type": "number",
               "minimum": 0,
               "maximum": 1,
               "description": "The confidence threshold used to determine if a burger is detected"
             },
-            worker_zones {
+            "worker_zones": {
               "type": "array",
               "description": "The zones that the worker is responsible for",
               "items": {
                 "type": "string"
               }
             },
-            worker_tracker_distance_threshold {
+            "worker_tracker_distance_threshold": {
               "type": "number",
               "description": "The distance threshold used by the worker tracker to determine if a person is in the zone"
             }
