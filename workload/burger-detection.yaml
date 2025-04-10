@@ -46,7 +46,7 @@ spec:
             },
             "vision_dayparts": {
               "type": "string",
-              "description": "Daypart definitions for vision (30 minute slices used to confirm that lighting conditions aren't impacting accuracy)",
+              "description": "Daypart definitions for vision (30 minute slices used to confirm that lighting conditions aren't impacting accuracy)"
             },      
             "model_class_mapping": {
               "type": "object",
