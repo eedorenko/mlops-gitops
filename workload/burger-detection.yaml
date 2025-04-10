@@ -10,7 +10,7 @@ spec:
   deploymentTargets:
     - name: dev
       labels:
-        purpose: dev-functional-test
+        purpose: dev-test
       environment: dev
       manifests:
         repo: https://github.com/eedorenko/mlops-gitops-gitops
@@ -18,7 +18,7 @@ spec:
         path: ./burger-detection
     - name: stage
       labels:
-        purpose: stage-test
+        purpose: functional-test
       environment: stage
       manifests:
         repo: https://github.com/eedorenko/mlops-gitops-gitops
